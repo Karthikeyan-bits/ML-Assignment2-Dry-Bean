@@ -458,19 +458,19 @@ if uploaded_file is not None:
 
     precision = precision_score(
         y_true, y_pred,
-        average="weighted",
+        average="macro",
         zero_division=0
     )
 
     recall = recall_score(
         y_true, y_pred,
-        average="weighted",
+        average="macro",
         zero_division=0
     )
 
     f1 = f1_score(
         y_true, y_pred,
-        average="weighted",
+        average="macro",
         zero_division=0
     )
 
@@ -485,7 +485,7 @@ if uploaded_file is not None:
         y_prob,
         labels=selected_model.classes_,
         multi_class="ovr",
-        average="weighted"
+        average="macro"
     )
 
     # Display all six mandatory metrics.
@@ -504,7 +504,7 @@ if uploaded_file is not None:
     metric_col6.metric("MCC", f"{mcc:.4f}")
 
     st.caption(
-        "Precision, Recall, F1 and AUC use weighted averaging. "
+        "Precision, Recall, F1 and AUC use macro averaging. "
         "AUC uses One-vs-Rest classification probabilities."
     )
 
@@ -588,7 +588,7 @@ if uploaded_file is not None:
             comparison_prob,
             labels=model.classes_,
             multi_class="ovr",
-            average="weighted"
+            average="macro"
         )
 
         # Calculate all six mandatory evaluation metrics.
@@ -600,15 +600,15 @@ if uploaded_file is not None:
             "AUC": comparison_auc,
             "Precision": precision_score(
                 y_uploaded, comparison_pred,
-                average="weighted", zero_division=0
+                average="macro", zero_division=0
             ),
             "Recall": recall_score(
                 y_uploaded, comparison_pred,
-                average="weighted", zero_division=0
+                average="macro", zero_division=0
             ),
             "F1-score": f1_score(
                 y_uploaded, comparison_pred,
-                average="weighted", zero_division=0
+                average="macro", zero_division=0
             ),
             "MCC": matthews_corrcoef(
                 y_uploaded, comparison_pred
@@ -618,9 +618,10 @@ if uploaded_file is not None:
     # Convert the results into a comparison table.
     comparison_df = pd.DataFrame(comparison_results)
 
-    # Sort models by accuracy, highest first.
+    # Rank models using the same criteria as the notebook.
     comparison_df = comparison_df.sort_values(
-        by="Accuracy", ascending=False
+        by=["F1-score", "MCC", "Accuracy"],
+        ascending=[False, False, False]
     ).reset_index(drop=True)
 
     # Display all six metrics rounded to four decimal places.
@@ -630,20 +631,20 @@ if uploaded_file is not None:
         hide_index=True
     )
 
-    # Identify the model with the highest test accuracy.
+    # Identify the model with the highest macro F1 score.
     best_model_name = comparison_df.iloc[0]["Model"]
-    best_accuracy = comparison_df.iloc[0]["Accuracy"]
+    best_f1 = comparison_df.iloc[0]["F1-score"]
 
     st.success(
-        f"Highest Accuracy: {best_model_name} "
-        f"({best_accuracy:.4f})"
+        f"Highest Macro F1: {best_model_name} "
+        f"({best_f1:.4f})"
     )
 
     # Explain the selection criterion clearly.
     st.caption(
-        "Models are ranked by accuracy on the uploaded test "
-        "dataset. AUC uses weighted One-vs-Rest probabilities. "
-        "Precision, Recall and F1 use weighted averaging. "
+        "Models are ranked by macro F1, then MCC and Accuracy. "
+        "AUC uses macro One-vs-Rest averaging. "
+        "Precision, Recall and F1 use macro averaging. "
         "All models are pre-trained and are not retrained here."
     )
 
