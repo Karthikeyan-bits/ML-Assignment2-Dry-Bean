@@ -39,17 +39,7 @@ st.set_page_config(
     page_icon="🫘",
     layout="wide"
 )
-st.markdown("### Student Details")
-st.markdown("""
-**Name:** KARTHIKEYAN S
 
-**BITS ID:** 2026AK05476
-
-**Course:** Machine Learning
-
-**Assignment:** ML Assignment 2
-""")
-st.divider()
 
 # ------------------------------------------------------------
 # APPLICATION THEME AND HERO BANNER
@@ -288,6 +278,35 @@ st.sidebar.caption(
     f"Available trained models: {len(models)}"
 )
 
+# Student details at the bottom of the sidebar
+st.sidebar.markdown(
+    """
+    <style>
+    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
+        min-height: 100%;
+    }
+
+    .student-details {
+        position: fixed;
+        bottom: 25px;
+        left: 20px;
+        width: 240px;
+        color: white;
+        font-size: 12px;
+        line-height: 1.9;
+    }
+    </style>
+
+    <div class="student-details">
+        <strong>Student Details</strong><br>
+        Name: KARTHIKEYAN S<br>
+        BITS ID: 2026AK05476<br>
+        Course: Machine Learning<br>
+        Assignment: ML Assignment 2
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 # ------------------------------------------------------------
 # SECTION 7 - VALIDATE UPLOADED TEST DATA
