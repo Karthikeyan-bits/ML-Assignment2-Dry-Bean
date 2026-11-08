@@ -39,6 +39,17 @@ st.set_page_config(
     page_icon="🫘",
     layout="wide"
 )
+st.markdown("### Student Details")
+st.markdown("""
+**Name:** KARTHIKEYAN S
+
+**BITS ID:** 2026AK05476
+
+**Course:** Machine Learning
+
+**Assignment:** ML Assignment 2
+""")
+st.divider()
 
 # ------------------------------------------------------------
 # APPLICATION THEME AND HERO BANNER
